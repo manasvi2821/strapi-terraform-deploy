@@ -13,3 +13,8 @@ cd my-strapi-app
 npm install
 npm run develop
 open http://localhost:1337/admin
+
+Pull Request link: https://github.com/PearlThoughtsInternship/The-Config-Crew/pull/2
+
+Loom video link:
+
