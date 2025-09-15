@@ -8,6 +8,7 @@
 
    
 3. Built admin and ran: npm run build && npm run develop
+  <img width="1440" height="900" alt="Screenshot 2025-09-15 at 8 25 01 PM" src="https://github.com/user-attachments/assets/a8f6be81-96fa-4f9e-b8e1-637a9f01b361" />
 4. Pushed code to branch `Aman` of repository https://github.com/PearlThoughtsInternship/The-Config-Crew
 
 ## Run locally
