@@ -1,61 +1,46 @@
-# 🚀 Getting started with Strapi
+# 🚀 DevOps Internship Task - Strapi CMS Setup
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+![Strapi Logo](https://raw.githubusercontent.com/strapi/strapi/main/docs/assets/images/strapi-logo.png)
 
-### `develop`
-
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
-
-```
-npm run develop
-# or
-yarn develop
-```
-
-### `start`
-
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
-
-```
-npm run start
-# or
-yarn start
-```
-
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+This repository demonstrates the **Strapi CMS setup**. It covers running Strapi locally, creating a **sample content type**, and documenting all steps with visuals and a Loom walkthrough.
 
 ---
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+## 🛠 Technologies & Tools
+| Tool/Technology | Version/Notes                  |
+|-----------------|--------------------------------|
+| Node.js          | 18+                            |
+| npm / yarn       | Latest stable                  |
+| Strapi CMS       | v4.x                           |
+| Git & GitHub     | For version control & PR       |
+
+---
+
+
+## ⚡Steps to run locally
+- Open the Admin Panel: http://localhost:1337/admin
+- Create an admin account
+- Explore folder structure and Content-Type Builder
+- Create the sample content type
+
+
+## Steps Performed
+1. Cloned Strapi repo: [https://github.com/strapi/strapi](https://github.com/strapi/strapi)
+2. Installed dependencies using `npm install`
+3. Started Strapi locally with `npm run develop`
+4. Accessed Admin Panel at `http://localhost:1337/admin`
+5. Created an admin user
+6. Explored folder structure:
+   - `/src`, `/config`, `/public`, `package.json`
+7. Created a sample Content Type `Blog` with fields:
+   - Title (Text)
+   - Description (Rich Text)
+   - Published Date (Date)
+   - Author (text)
+8. Added a few sample entries
+9. Pushed the setup to GitHub repo under branch `manasvi-sharma`
+
+
+## Loom Video
+- TASK-1
+🔗 [Loom Video Link](https://www.loom.com/share/8c5968aa68c84e80a3669db47c34d510?sid=2967c912-04e4-4337-aaf0-95b94b8aae47)  
