@@ -1,23 +1,55 @@
-# Strapi Assignment - my-strapi-app
+# Internship Guidelines
 
-## Steps I followed
-1. Created Strapi project: npx create-strapi@latest my-strapi-app --quickstart
-2. Created content type "Article" at src/api/article/content-types/article/schema.json
-   - fields: title (string), content (richtext)
-  <img width="1440" height="900" alt="Screenshot 2025-09-15 at 8 20 14 PM" src="https://github.com/user-attachments/assets/adf90070-00bc-4b8c-aa7f-12aff61ee7f8" />
+Welcome to the DevOps Internship Program at PearlThoughts!
 
-   
-3. Built admin and ran: npm run build && npm run develop
-  <img width="1440" height="900" alt="Screenshot 2025-09-15 at 8 25 01 PM" src="https://github.com/user-attachments/assets/a8f6be81-96fa-4f9e-b8e1-637a9f01b361" />
-4. Pushed code to branch `Aman` of repository https://github.com/PearlThoughtsInternship/The-Config-Crew
+---
 
-## Run locally
-git clone <repo-url>
-cd my-strapi-app
-npm install
-npm run develop
-open http://localhost:1337/admin
+## Assigned Tasks
 
-Pull Request link: https://github.com/PearlThoughtsInternship/The-Config-Crew/pull/2
+- Tasks will be assigned during training meetings.
+- Timely completion is crucial for your learning and contribution to the team.
 
-Loom video link:  https://www.loom.com/share/b9d8f83617ba4323879a90081e5af18c
+---
+
+## Daily Status Updates
+
+- You **must raise a Pull Request (PR)** and submit a status update **at the end of each day**.
+- Failure to submit a PR will be marked as **absent**.
+- Make sure the PR is always from your branch to main. Never commit anything to main!
+- Attach links of PR and loom video in the PR comment
+
+---
+
+## 📌 Responsibilities & Expectations
+
+### ✅ Participate in Virtual Meetings
+
+- Attend all scheduled team meetings to stay updated on projects and tasks.
+
+### ✅ Complete Assigned Tasks
+
+- Work on designated tasks/projects assigned by your supervisor.
+
+### ✅ Communicate Regularly
+
+- Maintain open communication with your team via **Email** or **Microsoft Teams**.
+
+### ✅ Document Work Progress
+
+- Keep track of your work and **document progress regularly**.
+
+### ✅ Support Team Members
+
+- Offer help to colleagues whenever possible to foster teamwork.
+
+### ✅ Meet Deadlines
+
+- Ensure all tasks are completed **on time** and to a satisfactory standard.
+
+### ✅ Maintain Professionalism
+
+- Uphold professionalism in **all communications** and **interactions**.
+
+---
+
+### Let's work together to build skills, contribute to the team, and grow professionally! 💫
