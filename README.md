@@ -24,7 +24,7 @@ This repository demonstrates the **Strapi CMS setup**. It covers running Strapi 
 - Create the sample content type
 
 
-## Steps Performed
+## Steps Performed to explore strapi & create sample content-type
 1. Cloned Strapi repo: [https://github.com/strapi/strapi](https://github.com/strapi/strapi)
 2. Installed dependencies using `npm install`
 3. Started Strapi locally with `npm run develop`
@@ -41,6 +41,18 @@ This repository demonstrates the **Strapi CMS setup**. It covers running Strapi 
 9. Pushed the setup to GitHub repo under branch `manasvi-sharma`
 
 
+## 🚀 Steps to Run Docker-compose
+
+1. Build images -> docker-compose build
+2. Start containers -> docker-compose up -d
+3. Check running containers -> docker ps
+4. Access Strapi at -> http://localhost/admin
+5. Stop containers -> docker-compose down
+
+
 ## Loom Video
 - TASK-1
 🔗 [Loom Video Link](https://www.loom.com/share/8c5968aa68c84e80a3669db47c34d510?sid=2967c912-04e4-4337-aaf0-95b94b8aae47)  
+
+- TASK -3 
+🔗 [Loom Video Link](https://www.loom.com/share/f26fd5eca69c48ee82e6792696810438?sid=bad90da1-b603-4fc3-80d2-583c1c14a845)
