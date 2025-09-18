@@ -50,9 +50,36 @@ This repository demonstrates the **Strapi CMS setup**. It covers running Strapi 
 5. Stop containers -> docker-compose down
 
 
+## 🚀 Steps to Deploy Strapi on AWS EC2 with Terraform & Docker
+
+- 1. Build & Push Docker Image
+   docker build -t <dockerhub-username>/strapi-app .
+   docker push <dockerhub-username>/strapi-app
+
+- 2. Configure Terraform
+      - Providers
+      - Variables
+      - user-data
+      - outputs
+
+- 3. Deploy with terraform
+      - terraform init
+      - terraform plan
+      - terraform apply
+
+- 4. Access strapi app
+      - http://<EC2_PUBLIC_IP>:1337
+      
+- 5. Destroy 
+      - terraform destroy
+
+
 ## Loom Video
 - TASK-1
 🔗 [Loom Video Link](https://www.loom.com/share/8c5968aa68c84e80a3669db47c34d510?sid=2967c912-04e4-4337-aaf0-95b94b8aae47)  
 
 - TASK -3 
 🔗 [Loom Video Link](https://www.loom.com/share/f26fd5eca69c48ee82e6792696810438?sid=bad90da1-b603-4fc3-80d2-583c1c14a845)
+
+- TASK-4
+🔗 [Loom Video Link](https://www.loom.com/share/8e5f4ff1321747f79035d07b0382500b?sid=d25ae940-8381-4d66-9577-1d5791d615dd)
