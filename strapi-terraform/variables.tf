@@ -1,16 +1,15 @@
 variable "region" {
   description = "AWS region"
-  default     = "ap-south-1"
+  type = string
 }
 
 variable "public_key_path" {
-  description = "Path to SSH public key"
-  default     = "C:/Users/user/.ssh/id_rsa.pub"
+  type = string
 }
 
-variable "key_name" {
-  description = "Name for AWS key pair"
-  default     = "strapi-key"
+variable "ssh_public_key" {
+  description = "Public SSH key for EC2 access"
+  type        = string
 }
 
 variable "instance_type" {
@@ -19,5 +18,5 @@ variable "instance_type" {
 
 variable "docker_image" {
   description = "Docker image to run "
-  default     = "manasviii/strapi-app:latest"
+  type = string
 }

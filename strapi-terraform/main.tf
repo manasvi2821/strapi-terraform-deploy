@@ -7,9 +7,9 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-resource "aws_key_pair" "deployer" {
-  key_name   = var.key_name
-  public_key = file(var.public_key_path)
+resource "aws_key_pair" "strapi_key" {
+  key_name   = "strapi-key"
+  public_key = var.ssh_public_key
 }
 
 resource "aws_security_group" "strapi_sg" {
@@ -51,6 +51,6 @@ resource "aws_instance" "strapi" {
   })
 
   tags = {
-    Name = "Strapi-EC2"
+    Name = "Manasvi-Strapi-EC2"
   }
 }

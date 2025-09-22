@@ -1,16 +1,18 @@
-name: CD - Terraform Deploy
+name: CD — Deploy with Terraform
+
 on:
   workflow_dispatch:
     inputs:
       image_ref:
-        description: 'ECR image to deploy'
+        description: "Docker image URI to deploy"
         required: true
 
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials
@@ -24,9 +26,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: infra
-        run: terraform init -input=false
+        run: terraform init
+        working-directory: terraform
+
+      - name: Terraform Plan
+        run: terraform plan -var "aws_region=${{ secrets.AWS_REGION }}" -var "image=${{ github.event.inputs.image_ref }}" -out=tfplan
+        working-directory: terraform
 
       - name: Terraform Apply
-        working-directory: infra
-        run: terraform apply -input=false -auto-approve -var "image=${{ github.event.inputs.image_ref }}"
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform
