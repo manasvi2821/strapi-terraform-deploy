@@ -20,7 +20,7 @@ resource "aws_security_group" "strapi_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/32"] # RECOMMEND: replace with your_ip/32
+    cidr_blocks = ["0.0.0.0/32"] 
   }
 
   ingress {
@@ -44,7 +44,7 @@ resource "aws_instance" "strapi" {
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
-  # substitute variables into the user-data script
+ 
   user_data = templatefile("${path.module}/user-data.sh", {
     docker_image = var.docker_image,
     region       = var.region

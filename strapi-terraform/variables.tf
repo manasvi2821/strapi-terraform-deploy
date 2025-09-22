@@ -18,6 +18,6 @@ variable "instance_type" {
 }
 
 variable "docker_image" {
-  description = "Docker image to run (include tag)"
+  description = "Docker image to run "
   default     = "manasviii/strapi-app:latest"
 }
