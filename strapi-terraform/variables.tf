@@ -1,6 +1,6 @@
 variable "region" {
   description = "AWS region"
-  default     = "us-east-1"
+  default     = "ap-south-1"
 }
 
 variable "public_key_path" {
