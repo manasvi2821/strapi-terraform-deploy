@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       image_ref:
-        description: 'ECR image to deploy (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com/strapi-app:abc1234)'
+        description: 'ECR image to deploy'
         required: true
 
 jobs:
