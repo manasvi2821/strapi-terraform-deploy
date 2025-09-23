@@ -40,7 +40,7 @@ jobs:
           echo "Building image: $IMAGE_URI"
 
           # Build and push image
-          docker build -t $IMAGE_URI ./strapi-app
+          docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
 
           # Optional: also tag as latest
