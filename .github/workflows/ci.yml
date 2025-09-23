@@ -32,6 +32,6 @@ jobs:
         id: build
         run: |
           IMAGE_URI=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ steps.sha.outputs.SHORT_SHA }}
-          docker build -t $IMAGE_URI .
+          docker build -t $IMAGE_URI ./
           docker push $IMAGE_URI
           echo "image_ref=$IMAGE_URI" >> $GITHUB_OUTPUT
