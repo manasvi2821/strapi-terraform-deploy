@@ -31,7 +31,7 @@ jobs:
       - name: Build and Push Docker Image
         id: build
         run: |
-          APP_NAME= strapi-app
+          APP_NAME=strapi-app
 
           # Generate timestamp for tag
           IMAGE_TAG="${APP_NAME}-$(date +'%Y%m%d-%H%M%S')"
