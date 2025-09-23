@@ -1,38 +1,62 @@
-name: CD — Deploy with Terraform
+name: Deploy Docker on EC2
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_ref:
-        description: "Docker image URI to deploy"
-        required: true
+  workflow_run:
+    workflows: ["Push Docker image to ECR"]
+    types:
+      - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1
 
-      - name: Setup Terraform
+      - name: Set Docker image URI from previous workflow
+        run: echo "IMAGE_URI=${{ github.event.workflow_run.outputs.image_ref }}" >> $GITHUB_ENV
+
+      - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform
+      - name: Initialize Terraform
+        run: terraform -chdir=terraform init
 
-      - name: Terraform Plan
-        run: terraform plan -var "aws_region=${{ secrets.AWS_REGION }}" -var "image=${{ github.event.inputs.image_ref }}" -out=tfplan
-        working-directory: terraform
+      - name: Apply Terraform to create EC2
+        run: terraform -chdir=terraform apply -auto-approve
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: terraform
+      - name: Get EC2 Public IP
+        id: ec2_ip
+        run: |
+          EC2_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)
+          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
+
+      - name: Wait for SSH to become available
+        run: |
+          until nc -z -v -w30 $EC2_IP 22
+          do
+            echo "Waiting for EC2 SSH..."
+            sleep 10
+          done
+
+      - name: Deploy Docker image to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_KEY_PAIR }} ec2-user@$EC2_IP <<EOF
+            # Install Docker
+            sudo yum update -y
+            sudo amazon-linux-extras install docker -y
+            sudo service docker start
+            sudo usermod -a -G docker ec2-user
+            docker login -u AWS -p \$(aws ecr get-login-password --region us-east-1) 889279754965.dkr.ecr.us-east-1.amazonaws.com
+            docker pull $IMAGE_URI
+            docker run -d -p 80:1337 $IMAGE_URI
+          EOF
