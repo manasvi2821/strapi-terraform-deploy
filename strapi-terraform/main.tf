@@ -41,6 +41,6 @@ resource "aws_instance" "docker_ec2" {
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   tags = {
-    Name = "DockerEC2"
+    Name = "Manasvi-strapi-server"
   }
 }
