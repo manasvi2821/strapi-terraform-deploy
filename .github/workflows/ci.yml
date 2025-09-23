@@ -1,39 +1,51 @@
-name: CI — Build & Push to ECR
+name: Push Docker image to ECR
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+  push-docker-image:
     runs-on: ubuntu-latest
     outputs:
       image_ref: ${{ steps.build.outputs.image_ref }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ap-south-1
 
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Get short SHA
-        id: sha
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Build and Push docker image
+      - name: Build and Push Docker Image
         id: build
         run: |
-          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.SHORT_SHA }}
-          echo "Building $IMAGE_URI"
-          docker build -t $IMAGE_URI .
+          APP_NAME= strapi-app
+
+          # Generate timestamp for tag
+          IMAGE_TAG="${APP_NAME}-$(date +'%Y%m%d-%H%M%S')"
+
+          REPO_URI= ${{secrets.ECR_REGISTRY}}
+          IMAGE_URI=$REPO_URI:$IMAGE_TAG
+
+          echo "Building image: $IMAGE_URI"
+
+          # Build and push image
+          docker build -t $IMAGE_URI ./strapi-app
           docker push $IMAGE_URI
+
+          # Optional: also tag as latest
+          docker tag $IMAGE_URI $REPO_URI:latest
+          docker push $REPO_URI:latest
+
+          # Output the image URI for other jobs
           echo "image_ref=$IMAGE_URI" >> $GITHUB_OUTPUT
