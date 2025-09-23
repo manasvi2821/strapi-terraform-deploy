@@ -36,7 +36,7 @@ jobs:
           # Generate timestamp for tag
           IMAGE_TAG="${APP_NAME}-$(date +'%Y%m%d-%H%M%S')"
 
-          REPO_URI= 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
+          REPO_URI=145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
           IMAGE_URI=$REPO_URI:$IMAGE_TAG
 
           echo "Building image: $IMAGE_URI"
