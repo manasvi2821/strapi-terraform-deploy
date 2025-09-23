@@ -78,7 +78,7 @@ This repository demonstrates the **Strapi CMS setup**. It covers running Strapi 
 - TASK-1
 🔗 [Loom Video Link](https://www.loom.com/share/8c5968aa68c84e80a3669db47c34d510?sid=2967c912-04e4-4337-aaf0-95b94b8aae47)  
 
-- TASK-1
+- TASK-2
 🔗 [Loom Video Link](https://www.loom.com/share/ee203d86def142039836a223f6b7bf62?sid=0d95cf66-73d2-4fdf-a23c-e18db47921c7)
 
 - TASK -3 
