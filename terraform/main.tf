@@ -1,8 +1,13 @@
+# Default VPC
+data "aws_vpc" "default" {
+  default = true
+}
+
 # Security Group for EC2
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
   description = "Allow SSH and HTTP"
-  vpc_id      = aws_vpc.default.id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description      = "SSH"
@@ -26,11 +31,6 @@ resource "aws_security_group" "ec2_sg" {
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
   }
-}
-
-# Default VPC
-data "aws_vpc" "default" {
-  default = true
 }
 
 # EC2 Instance
