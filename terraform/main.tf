@@ -67,11 +67,11 @@ resource "aws_iam_role_policy_attachment" "ssm_core" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# Create Instance Profile for the Role
-resource "aws_iam_instance_profile" "ec2_ecr_full_access_profile" {
-  name = "ec2_ecr_full_access_profile"
-  role = aws_iam_role.ec2_ecr_full_access_role.name
-}
+# # Create Instance Profile for the Role
+# resource "aws_iam_instance_profile" "ec2_ecr_full_access_profile" {
+#   name = "ec2_ecr_full_access_profile"
+#   role = aws_iam_role.ec2_ecr_full_access_role.name
+# }
 
 ############################
 # EC2 Instance
@@ -82,7 +82,7 @@ resource "aws_instance" "docker_ec2" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
-  iam_instance_profile   = aws_iam_instance_profile.ec2_ecr_full_access_profile.name
+  # iam_instance_profile   = aws_iam_instance_profile.ec2_ecr_full_access_profile.name
 
   tags = {
     Name = "Manasvi-strapi-server"
