@@ -123,11 +123,11 @@ jobs:
             
             # Pull latest image
             echo "📥 Pulling Docker image: $IMAGE_URI"
-            docker pull $IMAGE_URI
+            docker pull 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app:latest
             
             # Run new container
             echo "🏃 Starting new container..."
-            docker run -d --name strapi-app --restart unless-stopped -p 80:1337 $IMAGE_URI
+            docker run -d --name strapi-app --restart unless-stopped -p 80:1337 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app:latest
             
             # Verify deployment
             echo "✅ Verifying deployment..."
