@@ -100,7 +100,8 @@ jobs:
               sudo yum install docker -y
               sudo systemctl start docker
               sudo systemctl enable docker
-              sudo usermod -a -G docker ec2-user
+              sudo usermod -aG docker ec2-user
+              newgrp docker  # apply new group without logout
             else
               echo "🐳 Docker already installed"
               sudo systemctl start docker
