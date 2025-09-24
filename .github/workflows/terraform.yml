@@ -56,7 +56,7 @@ jobs:
             whoami
             # Add any setup commands you need below
           EOF
-        shell: /usr/bin/bash
+        
 
 
 
