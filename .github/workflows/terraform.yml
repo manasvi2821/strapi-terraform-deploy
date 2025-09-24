@@ -1,5 +1,4 @@
 name: Deploy Docker on EC2
-
 on:
   workflow_run:
     workflows: ["Push Docker image to ECR"]
@@ -9,88 +8,153 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Only run if the previous workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
-
-      - name: Set Docker image URI from previous workflow
-        run: echo "IMAGE_URI=${{ github.event.workflow_run.outputs.image_ref }}" >> $GITHUB_ENV
-
+          
+      - name: Get Docker image URI from previous workflow
+        id: get_image_uri
+        run: |
+          # Get the image URI from the previous workflow run
+          IMAGE_URI="${{ github.event.workflow_run.repository.full_name }}"
+          # You may need to adjust this based on how your ECR push workflow outputs the image URI
+          # Alternative: use GitHub API to get artifacts from previous workflow
+          echo "IMAGE_URI=145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app:${{ github.sha }}" >> $GITHUB_ENV
+          
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.0
-
+          
       - name: Initialize Terraform
         run: terraform -chdir=terraform init
-
+        
+      - name: Plan Terraform changes
+        run: terraform -chdir=terraform plan
+        
       - name: Apply Terraform to create EC2
         run: terraform -chdir=terraform apply -auto-approve
-
+        
       - name: Get EC2 Public IP
         id: ec2_ip
         run: |
           ip=$(terraform -chdir=terraform output -raw ec2_public_ip | tr -d '\n' | tr -d '\r')
           echo "ip=$ip" >> $GITHUB_OUTPUT
-
-      # - name: SSH into EC2 and run commands
-      #   env: 
-      #     PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR}}
-      #   run: |
-      #     echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-      #     ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }}
-        
-
-
-
-      # - name: Deploy Docker image to EC2
-      #   env: 
-      #     PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR}}
-      #   run: |
-      #     echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-      #     ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }} <<EOF
-      #       # Install Docker
-      #       sudo yum update -y
-      #       sudo amazon-linux-extras install docker -y
-      #       sudo service docker start
-      #       sudo usermod -a -G docker ec2-user
-      #       docker login -u AWS -p \$(aws ecr get-login-password --region ap-south-1) 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
-      #       docker pull $IMAGE_URI
-      #       docker run -d -p 80:1337 $IMAGE_URI
-      #     EOF
-
-
+          echo "EC2 Public IP: $ip"
+          
+      - name: Wait for EC2 to be ready
+        run: |
+          echo "Waiting for EC2 instance to be ready..."
+          sleep 60  # Wait for EC2 to fully boot
+          
+      - name: Test SSH connection
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          
+          # Test SSH connection with retries
+          for i in {1..5}; do
+            if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }} "echo 'SSH connection successful'"; then
+              echo "SSH connection established"
+              break
+            else
+              echo "SSH attempt $i failed, retrying in 30 seconds..."
+              sleep 30
+            fi
+          done
+          
       - name: Deploy Docker image to EC2
         env:
           PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR }}
           IMAGE_URI: ${{ env.IMAGE_URI }}
+          EC2_IP: ${{ steps.ec2_ip.outputs.ip }}
         run: |
-          # Create PEM file
           echo "$PRIVATE_KEY" > private_key
           chmod 600 private_key
-
-          # SSH into EC2 and deploy Docker
-          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }} <<EOF
-            echo "✅ Connected to EC2 successfully!"
-
-            # Install Docker
+          
+          # Deploy with better error handling
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@$EC2_IP <<'EOF'
+            set -e  # Exit on any error
+            
+            echo "🚀 Starting deployment on EC2..."
+            
+            # Update system
+            echo "📦 Updating system packages..."
             sudo yum update -y
-            sudo amazon-linux-extras install docker -y
-            sudo service docker start
-            sudo usermod -a -G docker ec2-user
-
+            
+            # Install Docker if not already installed
+            if ! command -v docker &> /dev/null; then
+              echo "🐳 Installing Docker..."
+              sudo amazon-linux-extras install docker -y
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              sudo usermod -a -G docker ec2-user
+            else
+              echo "🐳 Docker already installed"
+              sudo systemctl start docker
+            fi
+            
+            # Install AWS CLI if not present
+            if ! command -v aws &> /dev/null; then
+              echo "☁️ Installing AWS CLI..."
+              sudo yum install -y aws-cli
+            fi
+            
+            # Configure AWS credentials (assuming EC2 has IAM role)
+            export AWS_DEFAULT_REGION=ap-south-1
+            
             # Login to ECR
-            docker login -u AWS -p \$(aws ecr get-login-password --region ap-south-1) 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
-
-            # Pull and run Docker image
+            echo "🔑 Logging into ECR..."
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 145065858967.dkr.ecr.ap-south-1.amazonaws.com
+            
+            # Stop and remove existing container if running
+            echo "🛑 Stopping existing containers..."
+            docker stop strapi-app 2>/dev/null || echo "No existing container to stop"
+            docker rm strapi-app 2>/dev/null || echo "No existing container to remove"
+            
+            # Pull latest image
+            echo "📥 Pulling Docker image: $IMAGE_URI"
             docker pull $IMAGE_URI
-            docker run -d -p 80:1337 $IMAGE_URI
+            
+            # Run new container
+            echo "🏃 Starting new container..."
+            docker run -d --name strapi-app --restart unless-stopped -p 80:1337 $IMAGE_URI
+            
+            # Verify deployment
+            echo "✅ Verifying deployment..."
+            sleep 10
+            if docker ps | grep -q strapi-app; then
+              echo "🎉 Deployment successful! Container is running."
+            else
+              echo "❌ Deployment failed! Container is not running."
+              docker logs strapi-app
+              exit 1
+            fi
+            
+            echo "🌐 Application should be available at: http://$EC2_IP"
           EOF
-
+          
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f private_key
+          
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Deployment completed" >> $GITHUB_STEP_SUMMARY
+          echo "- **EC2 IP**: ${{ steps.ec2_ip.outputs.ip }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docker Image**: ${{ env.IMAGE_URI }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Application URL**: http://${{ steps.ec2_ip.outputs.ip }}" >> $GITHUB_STEP_SUMMARY
