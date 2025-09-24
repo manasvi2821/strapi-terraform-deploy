@@ -119,10 +119,7 @@ jobs:
             echo "🔑 Logging into ECR..."
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
             
-            # Stop and remove existing container if running
-            echo "🛑 Stopping existing containers..."
-            docker stop strapi-app 2>/dev/null || echo "No existing container to stop"
-            docker rm strapi-app 2>/dev/null || echo "No existing container to remove"
+            
             
             # Pull latest image
             echo "📥 Pulling Docker image: $IMAGE_URI"
