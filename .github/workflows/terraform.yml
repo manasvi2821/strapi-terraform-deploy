@@ -43,13 +43,15 @@ jobs:
       - name: Wait for SSH to become available
         run: |
           for i in {1..30}; do
-            if nc -z ${{ steps.ec2_ip.outputs.ip }} 22; then
-              echo "✅ EC2 is ready for SSH"
-              break
+            if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ${{ secrets.AWS_KEY_PAIR }} ec2-user@${{ steps.ec2_ip.outputs.ip }} "echo ok" >/dev/null 2>&1; then
+              echo "✅ SSH is ready on EC2"
+              exit 0
             fi
-            echo "⏳ Waiting for EC2 SSH..."
+            echo "⏳ Attempt $i: Waiting for EC2 SSH..."
             sleep 10
           done
+          echo "❌ Timeout: SSH not available after 5 minutes"
+          exit 1
 
       - name: Deploy Docker image to EC2
         run: |
