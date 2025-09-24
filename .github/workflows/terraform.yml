@@ -97,7 +97,7 @@ jobs:
             # Install Docker if not already installed
             if ! command -v docker &> /dev/null; then
               echo "🐳 Installing Docker..."
-              sudo amazon-linux-extras install docker -y
+              sudo yum install docker -y
               sudo systemctl start docker
               sudo systemctl enable docker
               sudo usermod -a -G docker ec2-user
@@ -117,7 +117,7 @@ jobs:
             
             # Login to ECR
             echo "🔑 Logging into ECR..."
-            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 145065858967.dkr.ecr.ap-south-1.amazonaws.com
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
             
             # Stop and remove existing container if running
             echo "🛑 Stopping existing containers..."
