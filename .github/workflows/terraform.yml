@@ -40,18 +40,15 @@ jobs:
           ip=$(terraform -chdir=terraform output -raw ec2_public_ip | tr -d '\n' | tr -d '\r')
           echo "ip=$ip" >> $GITHUB_OUTPUT
 
-      - name: Wait for SSH to become available
+      - name: Connect to EC2 directly
         run: |
-          for i in {1..30}; do
-            if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -i ${{ secrets.AWS_KEY_PAIR }} ec2-user@${{ steps.ec2_ip.outputs.ip }} "echo ok" >/dev/null 2>&1; then
-              echo "✅ SSH is ready on EC2"
-              exit 0
-            fi
-            echo "⏳ Attempt $i: Waiting for EC2 SSH..."
-            sleep 10
-          done
-          echo "❌ Timeout: SSH not available after 5 minutes"
-          exit 1
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_KEY_PAIR }} ec2-user@${{ steps.ec2_ip.outputs.ip }} << 'EOF'
+          echo "✅ Connected to EC2 successfully!"
+          # Place your commands here
+          uname -a
+          # any other setup commands
+          EOF
+
 
       - name: Deploy Docker image to EC2
         run: |
