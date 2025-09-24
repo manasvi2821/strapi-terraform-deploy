@@ -40,35 +40,57 @@ jobs:
           ip=$(terraform -chdir=terraform output -raw ec2_public_ip | tr -d '\n' | tr -d '\r')
           echo "ip=$ip" >> $GITHUB_OUTPUT
 
-      - name: SSH into EC2 and run commands
-        run: |
-          # Create the PEM file from GitHub Secrets
-          echo "${{ secrets.AWS_KEY_PAIR }}" > ec2_key.pem
-          chmod 600 ec2_key.pem
-
-          # SSH directly into the EC2 instance
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@${{ steps.ec2_ip.outputs.ip }} << 'EOF'
-            echo "✅ Connected to EC2 successfully!"
-
-            # Example commands to run on EC2
-            uname -a
-            df -h
-            whoami
-            # Add any setup commands you need below
-          EOF
+      # - name: SSH into EC2 and run commands
+      #   env: 
+      #     PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR}}
+      #   run: |
+      #     echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+      #     ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }}
         
 
 
 
+      # - name: Deploy Docker image to EC2
+      #   env: 
+      #     PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR}}
+      #   run: |
+      #     echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+      #     ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }} <<EOF
+      #       # Install Docker
+      #       sudo yum update -y
+      #       sudo amazon-linux-extras install docker -y
+      #       sudo service docker start
+      #       sudo usermod -a -G docker ec2-user
+      #       docker login -u AWS -p \$(aws ecr get-login-password --region ap-south-1) 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
+      #       docker pull $IMAGE_URI
+      #       docker run -d -p 80:1337 $IMAGE_URI
+      #     EOF
+
+
       - name: Deploy Docker image to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_KEY_PAIR }}
+          IMAGE_URI: ${{ env.IMAGE_URI }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_KEY_PAIR }} ec2-user@${{ steps.ec2_ip.outputs.ip }} <<EOF
+          # Create PEM file
+          echo "$PRIVATE_KEY" > private_key
+          chmod 600 private_key
+
+          # SSH into EC2 and deploy Docker
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@${{ steps.ec2_ip.outputs.ip }} <<EOF
+            echo "✅ Connected to EC2 successfully!"
+
             # Install Docker
             sudo yum update -y
             sudo amazon-linux-extras install docker -y
             sudo service docker start
             sudo usermod -a -G docker ec2-user
-            docker login -u AWS -p \$(aws ecr get-login-password --region us-east-1) 889279754965.dkr.ecr.us-east-1.amazonaws.com
+
+            # Login to ECR
+            docker login -u AWS -p \$(aws ecr get-login-password --region ap-south-1) 145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi-app
+
+            # Pull and run Docker image
             docker pull $IMAGE_URI
             docker run -d -p 80:1337 $IMAGE_URI
           EOF
+
