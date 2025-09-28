@@ -58,8 +58,8 @@ jobs:
       - name: Wait for ECS service stable
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
-          CLUSTER=$(terraform output -raw ecs_cluster_name)
-          SERVICE=$(terraform output -raw ecs_service_name)
+          CLUSTER=$(terraform output -raw ecs_cluster_name | tr -d '\r\n')
+          SERVICE=$(terraform output -raw ecs_service_name | tr -d '\r\n')
           aws ecs wait services-stable --cluster "${CLUSTER}" --services "${SERVICE}" --region $AWS_REGION
           echo "ECS service is stable."
 
