@@ -55,19 +55,21 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform apply -auto-approve -input=false -var "image_url=${{ env.ECR_URI }}"
 
-      - name: Wait for ECS service stable
+      - name: Terraform outputs
+        id: tf_outputs
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
-            # Extract ECS outputs using terraform output and strip quotes/newlines
-            CLUSTER=$(terraform output ecs_cluster_name | tr -d '"\r\n')
-            SERVICE=$(terraform output ecs_service_name | tr -d '"\r\n')
+            echo "ecs_cluster_name=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_OUTPUT
+            echo "ecs_service_name=$(terraform output -raw ecs_service_name)" >> $GITHUB_OUTPUT
 
-            echo "Cluster: $CLUSTER"
-            echo "Service: $SERVICE"
-
-            # Wait for ECS service to stabilize
-            aws ecs wait services-stable --cluster "$CLUSTER" --services "$SERVICE" --region $AWS_REGION
-            echo "ECS service '${SERVICE}' in cluster '${CLUSTER}' is stable."
+      - name: Wait for ECS service stable
+        run: |
+            echo "Cluster: ${{ steps.tf_outputs.outputs.ecs_cluster_name }}"
+            echo "Service: ${{ steps.tf_outputs.outputs.ecs_service_name }}"
+            aws ecs wait services-stable \
+                --cluster "${{ steps.tf_outputs.outputs.ecs_cluster_name }}" \
+                --services "${{ steps.tf_outputs.outputs.ecs_service_name }}" \
+                --region $AWS_REGION
 
 
 
