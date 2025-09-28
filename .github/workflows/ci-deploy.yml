@@ -1,79 +1,79 @@
 name: Build & Deploy Strapi to ECS (Terraform)
 
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+    push:
+        branches: [main]
+    workflow_dispatch:
 
 permissions:
-  contents: read
+    contents: read
 
 env:
-  TF_WORKING_DIR: terraform02
-  AWS_REGION: ${{ secrets.AWS_REGION }}
+    TF_WORKING_DIR: terraform02
+    AWS_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
-  build-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    build-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
 
-      - name: Setup Terraform CLI
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.7
+            - name: Setup Terraform CLI
+              uses: hashicorp/setup-terraform@v2
+              with:
+                  terraform_version: 1.5.7
 
-      - name: Terraform init
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform init -input=false
+            - name: Terraform init
+              working-directory: ${{ env.TF_WORKING_DIR }}
+              run: terraform init -input=false
 
-      - name: Login to ECR
-        run: |
-          ECR_REPO="${{ secrets.ECR_REPOSITORY_02 }}"
-          REGISTRY=$(echo "${ECR_REPO}" | cut -d'/' -f1)
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${REGISTRY}
-          echo "ECR_REPO=${ECR_REPO}" >> $GITHUB_ENV
+            - name: Login to ECR
+              run: |
+                  ECR_REPO="${{ secrets.ECR_REPOSITORY_02 }}"
+                  REGISTRY=$(echo "${ECR_REPO}" | cut -d'/' -f1)
+                  aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${REGISTRY}
+                  echo "ECR_REPO=${ECR_REPO}" >> $GITHUB_ENV
 
-      - name: Build, tag, and push Docker image
-        run: |
-          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
-          IMAGE_TAG="${SHORT_SHA}"
-          docker build -t "${ECR_REPO}:${IMAGE_TAG}" .
-          docker push "${ECR_REPO}:${IMAGE_TAG}"
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
-          echo "ECR_URI=${ECR_REPO}:${IMAGE_TAG}" >> $GITHUB_ENV
+            - name: Build, tag, and push Docker image
+              run: |
+                  SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+                  IMAGE_TAG="${SHORT_SHA}"
+                  docker build -t "${ECR_REPO}:${IMAGE_TAG}" .
+                  docker push "${ECR_REPO}:${IMAGE_TAG}"
+                  echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+                  echo "ECR_URI=${ECR_REPO}:${IMAGE_TAG}" >> $GITHUB_ENV
 
-      - name: Terraform apply (update ECS task definition)
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform apply -auto-approve -input=false -var "image_url=${{ env.ECR_URI }}"
+            - name: Terraform apply (update ECS task definition)
+              working-directory: ${{ env.TF_WORKING_DIR }}
+              run: terraform apply -auto-approve -input=false -var "image_url=${{ env.ECR_URI }}"
 
-      - name: Terraform outputs
-        id: tf_outputs
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: |
-            echo "ecs_cluster_name=$(terraform output -raw ecs_cluster_name)" >> $GITHUB_OUTPUT
-            echo "ecs_service_name=$(terraform output -raw ecs_service_name)" >> $GITHUB_OUTPUT
+            - name: Wait for ECS service stable
+              working-directory: ${{ env.TF_WORKING_DIR }}
+              run: |
+                # Extract ECS outputs using Terraform directly
+                CLUSTER=$(terraform output ecs_cluster_name | tail -n1)
+                SERVICE=$(terraform output ecs_service_name | tail -n1)
 
-      - name: Wait for ECS service stable
-        run: |
-            echo "Cluster: ${{ steps.tf_outputs.outputs.ecs_cluster_name }}"
-            echo "Service: ${{ steps.tf_outputs.outputs.ecs_service_name }}"
-            aws ecs wait services-stable \
-                --cluster "${{ steps.tf_outputs.outputs.ecs_cluster_name }}" \
-                --services "${{ steps.tf_outputs.outputs.ecs_service_name }}" \
+                echo "Cluster: $CLUSTER"
+                echo "Service: $SERVICE"
+
+                # Wait for ECS service to stabilize
+                aws ecs wait services-stable \
+                --cluster "$CLUSTER" \
+                --services "$SERVICE" \
                 --region $AWS_REGION
 
+                echo "ECS service '${SERVICE}' in cluster '${CLUSTER}' is stable."
 
-
-      - name: Print ALB URL
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: |
-            echo "Strapi ALB DNS: $(terraform output -raw alb_dns_name)"
+            - name: Print ALB URL
+              working-directory: ${{ env.TF_WORKING_DIR }}
+              run: |
+                echo "Strapi ALB DNS: $(terraform output -raw alb_dns_name)"
