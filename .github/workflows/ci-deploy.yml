@@ -58,15 +58,20 @@ jobs:
       - name: Wait for ECS service stable
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
-            CLUSTER=$(terraform output -raw ecs_cluster_name | tr -d '\r\n')
-            SERVICE=$(terraform output -raw ecs_service_name | tr -d '\r\n')
+            # Install jq just in case
+            sudo apt-get update && sudo apt-get install -y jq
 
-            aws ecs wait services-stable \
-              --cluster "${CLUSTER}" \
-              --services "${SERVICE}" \
-              --region $AWS_REGION
+            # Extract cluster and service names safely
+            CLUSTER=$(terraform output -json ecs_cluster_name | jq -r '.')
+            SERVICE=$(terraform output -json ecs_service_name | jq -r '.')
 
+            echo "Cluster: $CLUSTER"
+            echo "Service: $SERVICE"
+
+            # Wait for ECS service to stabilize
+            aws ecs wait services-stable --cluster "$CLUSTER" --services "$SERVICE" --region $AWS_REGION
             echo "ECS service '${SERVICE}' in cluster '${CLUSTER}' is stable."
+
 
 
       - name: Print ALB URL
