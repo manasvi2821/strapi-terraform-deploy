@@ -34,7 +34,7 @@ resource "aws_cloudwatch_dashboard" "ecs_strapi_dashboard" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs_high_cpu" {
-  alarm_name          = "ecs-strapi-high-cpu"
+  alarm_name          = "manasvi-ecs-strapi-high-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
