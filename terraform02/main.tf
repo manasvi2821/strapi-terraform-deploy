@@ -73,29 +73,14 @@ resource "aws_ecs_task_definition" "task" {
         }
       }
       environment = [
-        {
-          name = "DATABASE_CLIENT", value = "postgres"
-        },
-        {
-          name = "DATABASE_HOST", value = aws_db_instance.strapi_rds.address
-        },
-        {
-          name = "DATABASE_PORT", value = "5432"
-        },
-        {
-          name  = "DATABASE_NAME", value = aws_db_instance.strapi_rds.db_name
-        },
-        {
-          name  = "DATABASE_USERNAME", value = aws_db_instance.strapi_rds.username
-        },
-        {
-          name  = "DATABASE_PASSWORD", value = aws_db_instance.strapi_rds.password
-        },
+        { name = "DATABASE_CLIENT", value = "postgres" },
+        { name = "DATABASE_HOST", value = aws_db_instance.strapi_rds.address },
+        { name = "DATABASE_PORT", value = "5432" },
+        { name  = "DATABASE_NAME", value = var.db_name },
+        { name  = "DATABASE_USERNAME", value = var.db_username },
+        { name  = "DATABASE_PASSWORD", value = var.db_password },
         { name = "DATABASE_SSL", value = "true" },
-        {
-         name  = "DATABASE_SSL_REJECT_UNAUTHORIZED"
-         value = "false"
-        }
+        { name  = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" }
       ]
     }
   ])

@@ -22,3 +22,14 @@ variable "image_url" {
   description = "Docker image URL (from GitHub Actions build)"
 }
 
+variable "db_name" {
+  default = "manasvi-strapi-db"
+}
+
+variable "db_username" {
+  default = "manasvi-db"
+}
+
+variable "db_password" {
+  default = "manasvi1234"
+}
