@@ -1,6 +1,6 @@
 # Get default VPC and subnets
 data "aws_vpc" "default" {
-    default = true
+  default = true
 }
 
 data "aws_subnets" "default_subnets" {
@@ -15,15 +15,10 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.cluster_name
 }
 
-# Logs
-resource "aws_cloudwatch_log_group" "ecs" {
-  name              = "/ecs/${var.service_name}"
-  retention_in_days = 7
-}
 
 # IAM Execution Role
 data "aws_iam_role" "ecs_role" {
-  name = "manasvi-ecs-role"  
+  name = "manasvi-ecs-role"
 }
 
 # ECS Service
@@ -35,8 +30,8 @@ resource "aws_ecs_service" "service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = data.aws_subnets.default_subnets.ids
-    security_groups = [aws_security_group.task_sg.id]
+    subnets          = data.aws_subnets.default_subnets.ids
+    security_groups  = [aws_security_group.task_sg.id]
     assign_public_ip = true
   }
 
@@ -67,6 +62,7 @@ resource "aws_ecs_task_definition" "task" {
       portMappings = [{
         containerPort = var.container_port
         hostPort      = var.container_port
+        protocol      = "tcp"
       }]
       logConfiguration = {
         logDriver = "awslogs"
@@ -76,7 +72,28 @@ resource "aws_ecs_task_definition" "task" {
           awslogs-stream-prefix = var.service_name
         }
       }
+      environment = [
+        {
+          name = "DATABASE_CLIENT", value = "postgres"
+        },
+        {
+          name = "DATABASE_HOST", value = aws_db_instance.strapi_rds.address
+        },
+        {
+          name = "DATABASE_PORT", value = "5432"
+        },
+        {
+          name  = "DATABASE_NAME", value = aws_db_instance.strapi_rds.db_name
+        },
+        {
+          name  = "DATABASE_USERNAME", value = aws_db_instance.strapi_rds.username
+        },
+        {
+          name  = "DATABASE_PASSWORD", value = aws_db_instance.strapi_rds.password
+        }
+      ]
     }
   ])
 }
+
 
