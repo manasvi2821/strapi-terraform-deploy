@@ -23,13 +23,13 @@ variable "image_url" {
 }
 
 variable "db_name" {
-  default = "manasvi-strapi-db"
+  default = "manasvistrapidb"
 }
 
 variable "db_username" {
-  default = "manasvi-db"
+  default = "manasvidb"
 }
 
 variable "db_password" {
-  default = "manasvi1234"
+  default = "manasvi1234!"
 }
