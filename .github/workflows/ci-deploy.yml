@@ -31,14 +31,15 @@ jobs:
               with:
                   terraform_version: 1.5.7
 
+          
+            - name: Terraform init
+              working-directory: ${{ env.TF_WORKING_DIR }}
+              run: terraform init -input=false
+
             - name: Terraform destroy (cleanup old resources)
               working-directory: ${{ env.TF_WORKING_DIR }}
               run: terraform destroy -auto-approve -input=false
 
-
-            - name: Terraform init
-              working-directory: ${{ env.TF_WORKING_DIR }}
-              run: terraform init -input=false
 
             - name: Login to ECR
               run: |
