@@ -36,9 +36,9 @@ jobs:
               working-directory: ${{ env.TF_WORKING_DIR }}
               run: terraform init -input=false
 
-            - name: Terraform destroy (cleanup old resources)
-              working-directory: ${{ env.TF_WORKING_DIR }}
-              run: terraform destroy -auto-approve -input=false
+            # - name: Terraform destroy (cleanup old resources)
+            #   working-directory: ${{ env.TF_WORKING_DIR }}
+            #   run: terraform destroy -auto-approve -input=false
 
 
             - name: Login to ECR
