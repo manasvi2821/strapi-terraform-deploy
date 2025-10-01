@@ -14,7 +14,6 @@ resource "aws_db_instance" "strapi_rds" {
   skip_final_snapshot = true
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnets.name
-  parameter_group_name = aws_db_parameter_group.postgres_dev.name
   backup_retention_period = 7
   backup_window = "02:00-03:00"
   maintenance_window = "sun:04:00-sun:05:00"
