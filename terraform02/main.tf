@@ -15,6 +15,17 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.cluster_name
 }
 
+resource "aws_ecs_cluster_capacity_providers" "cluster_capacity_providers" {
+  cluster_name = aws_ecs_cluster.cluster.name
+
+  capacity_providers = ["FARGATE_SPOT"]
+
+  default_capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
+}
+
 
 # IAM Execution Role
 data "aws_iam_role" "ecs_role" {
@@ -27,7 +38,7 @@ resource "aws_ecs_service" "service" {
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task.arn
   desired_count   = 1
-  launch_type     = "FARGATE"
+  # launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = data.aws_subnets.default_subnets.ids
@@ -40,7 +51,10 @@ resource "aws_ecs_service" "service" {
     container_name   = var.container_name
     container_port   = var.container_port
   }
-
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
   depends_on = [aws_lb_listener.http]
 }
 

@@ -31,7 +31,7 @@ resource "aws_db_subnet_group" "rds_subnets" {
 
 # Create a custom parameter group for PostgreSQL
 resource "aws_db_parameter_group" "strapi_pg_params" {
-  name        = "strapi-pg-params"
+  name        = "manasvi-strapi-pg-params"
   family      = "postgres16" # Change to your actual RDS version family
   description = "Custom params for Strapi PostgreSQL"
 
