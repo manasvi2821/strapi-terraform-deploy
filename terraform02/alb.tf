@@ -29,6 +29,7 @@ resource "aws_lb_target_group" "blue" {
   port     = 1337
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
+  target_type = "ip"
 }
 
 resource "aws_lb_target_group" "green" {
@@ -36,6 +37,7 @@ resource "aws_lb_target_group" "green" {
   port     = 1337
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
+  target_type = "ip"
 }
 
 

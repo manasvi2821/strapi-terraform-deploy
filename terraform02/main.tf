@@ -40,6 +40,10 @@ resource "aws_ecs_service" "service" {
   desired_count   = 1
   # launch_type     = "FARGATE"
 
+   deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+  
   network_configuration {
     subnets          = data.aws_subnets.default_subnets.ids
     security_groups  = [aws_security_group.task_sg.id]
@@ -74,7 +78,7 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions = jsonencode([
     {
       name      = var.container_name
-      image     = var.image_url
+      image     = "145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi02:0afda34"
       essential = true
       portMappings = [{
         containerPort = var.container_port

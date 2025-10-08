@@ -1,11 +1,11 @@
 {
   "version": 4,
   "terraform_version": "1.11.4",
-  "serial": 327,
+  "serial": 269,
   "lineage": "ea174312-a4bc-7c19-0462-0daf3a96eca6",
   "outputs": {
     "alb_dns_name": {
-      "value": "manasvi-strapi-service-alb-1410303921.ap-south-1.elb.amazonaws.com",
+      "value": "manasvi-strapi-service-alb-127056962.ap-south-1.elb.amazonaws.com",
       "type": "string"
     },
     "ecs_cluster_name": {
@@ -38,7 +38,7 @@
             "permissions_boundary": "",
             "role_last_used": [
               {
-                "last_used_date": "2025-10-08T14:10:10Z",
+                "last_used_date": "2025-10-06T17:40:39Z",
                 "region": "ap-south-1"
               }
             ],
@@ -141,7 +141,7 @@
             "tags_all": {}
           },
           "sensitive_attributes": [],
-          "private": "bnVsbA=="
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ=="
         }
       ]
     },
@@ -154,11 +154,11 @@
         {
           "schema_version": 0,
           "attributes": {
-            "application_id": "b77e5d0c-0e8e-42b3-8178-3025b26c38bc",
+            "application_id": "b4cc5ab6-fa97-423a-9f3d-b62b9e48a060",
             "arn": "arn:aws:codedeploy:ap-south-1:145065858967:application:manasvi-strapi-deploy-app",
             "compute_platform": "ECS",
             "github_account_name": "",
-            "id": "b77e5d0c-0e8e-42b3-8178-3025b26c38bc:manasvi-strapi-deploy-app",
+            "id": "b4cc5ab6-fa97-423a-9f3d-b62b9e48a060:manasvi-strapi-deploy-app",
             "linked_to_github": false,
             "name": "manasvi-strapi-deploy-app",
             "region": "ap-south-1",
@@ -185,7 +185,7 @@
             "apply_immediately": false,
             "arn": "arn:aws:rds:ap-south-1:145065858967:db:manasvi-strapi-db",
             "auto_minor_version_upgrade": true,
-            "availability_zone": "ap-south-1c",
+            "availability_zone": "ap-south-1a",
             "backup_retention_period": 7,
             "backup_target": "region",
             "backup_window": "02:00-03:00",
@@ -203,26 +203,26 @@
             "deletion_protection": false,
             "domain": "",
             "domain_auth_secret_arn": "",
-            "domain_dns_ips": null,
+            "domain_dns_ips": [],
             "domain_fqdn": "",
             "domain_iam_role_name": "",
             "domain_ou": "",
-            "enabled_cloudwatch_logs_exports": null,
+            "enabled_cloudwatch_logs_exports": [],
             "endpoint": "manasvi-strapi-db.cfm4w6cwkca1.ap-south-1.rds.amazonaws.com:5432",
             "engine": "postgres",
             "engine_lifecycle_support": "open-source-rds-extended-support",
-            "engine_version": "16.3",
-            "engine_version_actual": "16.3",
+            "engine_version": "16.8",
+            "engine_version_actual": "16.8",
             "final_snapshot_identifier": null,
             "hosted_zone_id": "Z2VFMSZA74J7XZ",
             "iam_database_authentication_enabled": false,
-            "id": "db-KFCEJ5VO2RGCTGNEQNEI3V5UKY",
+            "id": "db-SQS7RF2ZOAG7OV2NFIIY72KRFI",
             "identifier": "manasvi-strapi-db",
             "identifier_prefix": "",
             "instance_class": "db.t3.micro",
             "iops": 0,
             "kms_key_id": "",
-            "latest_restorable_time": "2025-10-08T14:51:49Z",
+            "latest_restorable_time": "2025-10-06T17:49:35Z",
             "license_model": "postgresql-license",
             "listener_endpoint": [],
             "maintenance_window": "sun:04:00-sun:05:00",
@@ -249,7 +249,7 @@
             "replica_mode": "",
             "replicas": [],
             "replicate_source_db": "",
-            "resource_id": "db-KFCEJ5VO2RGCTGNEQNEI3V5UKY",
+            "resource_id": "db-SQS7RF2ZOAG7OV2NFIIY72KRFI",
             "restore_to_point_in_time": [],
             "s3_import": [],
             "skip_final_snapshot": true,
@@ -258,14 +258,14 @@
             "storage_encrypted": false,
             "storage_throughput": 0,
             "storage_type": "gp2",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeouts": null,
             "timezone": "",
             "upgrade_storage_config": null,
             "username": "manasvidb",
             "vpc_security_group_ids": [
-              "sg-0ddcac72be559565b"
+              "sg-056b310854a11f602"
             ]
           },
           "sensitive_attributes": [
@@ -323,7 +323,7 @@
             "tags_all": {}
           },
           "sensitive_attributes": [],
-          "private": "bnVsbA=="
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ=="
         }
       ]
     },
@@ -355,7 +355,7 @@
             "vpc_id": "vpc-01b35def73b166fdc"
           },
           "sensitive_attributes": [],
-          "private": "bnVsbA==",
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
           "dependencies": [
             "data.aws_subnets.default_subnets",
             "data.aws_vpc.default"
@@ -432,7 +432,7 @@
         {
           "schema_version": 1,
           "attributes": {
-            "arn": "arn:aws:ecs:ap-south-1:145065858967:task-definition/manasvi-strapi-service-task:25",
+            "arn": "arn:aws:ecs:ap-south-1:145065858967:task-definition/manasvi-strapi-service-task:24",
             "arn_without_revision": "arn:aws:ecs:ap-south-1:145065858967:task-definition/manasvi-strapi-service-task",
             "container_definitions": "[{\"environment\":[{\"name\":\"DATABASE_CLIENT\",\"value\":\"postgres\"},{\"name\":\"DATABASE_HOST\",\"value\":\"manasvi-strapi-db.cfm4w6cwkca1.ap-south-1.rds.amazonaws.com\"},{\"name\":\"DATABASE_NAME\",\"value\":\"manasvistrapidb\"},{\"name\":\"DATABASE_PASSWORD\",\"value\":\"manasvi1234!\"},{\"name\":\"DATABASE_PORT\",\"value\":\"5432\"},{\"name\":\"DATABASE_SSL\",\"value\":\"true\"},{\"name\":\"DATABASE_SSL_REJECT_UNAUTHORIZED\",\"value\":\"false\"},{\"name\":\"DATABASE_USERNAME\",\"value\":\"manasvidb\"}],\"essential\":true,\"image\":\"145065858967.dkr.ecr.ap-south-1.amazonaws.com/manasvi/strapi02:0afda34\",\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"/ecs/manasvi-strapi-service\",\"awslogs-region\":\"ap-south-1\",\"awslogs-stream-prefix\":\"manasvi-strapi-service\"}},\"mountPoints\":[],\"name\":\"manasvi-strapi\",\"portMappings\":[{\"containerPort\":1337,\"hostPort\":1337,\"protocol\":\"tcp\"}],\"systemControls\":[],\"volumesFrom\":[]}]",
             "cpu": "512",
@@ -451,10 +451,10 @@
             "requires_compatibilities": [
               "FARGATE"
             ],
-            "revision": 25,
+            "revision": 24,
             "runtime_platform": [],
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "task_role_arn": "",
             "track_latest": false,
@@ -493,8 +493,8 @@
                 "prefix": ""
               }
             ],
-            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3f146fe2da3597c0",
-            "arn_suffix": "app/manasvi-strapi-service-alb/3f146fe2da3597c0",
+            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3e9bee3417e41e78",
+            "arn_suffix": "app/manasvi-strapi-service-alb/3e9bee3417e41e78",
             "client_keep_alive": 3600,
             "connection_logs": [
               {
@@ -505,7 +505,7 @@
             ],
             "customer_owned_ipv4_pool": "",
             "desync_mitigation_mode": "defensive",
-            "dns_name": "manasvi-strapi-service-alb-1410303921.ap-south-1.elb.amazonaws.com",
+            "dns_name": "manasvi-strapi-service-alb-127056962.ap-south-1.elb.amazonaws.com",
             "dns_record_client_routing_policy": null,
             "drop_invalid_header_fields": false,
             "enable_cross_zone_load_balancing": true,
@@ -516,7 +516,7 @@
             "enable_xff_client_port": false,
             "enable_zonal_shift": false,
             "enforce_security_group_inbound_rules_on_private_link_traffic": "",
-            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3f146fe2da3597c0",
+            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3e9bee3417e41e78",
             "idle_timeout": 60,
             "internal": false,
             "ip_address_type": "ipv4",
@@ -529,7 +529,7 @@
             "region": "ap-south-1",
             "secondary_ips_auto_assigned_per_subnet": null,
             "security_groups": [
-              "sg-024606a903286e11f"
+              "sg-02ae0ec846c5b9797"
             ],
             "subnet_mapping": [
               {
@@ -567,7 +567,7 @@
             "zone_id": "ZP97RAFLXTNZK"
           },
           "sensitive_attributes": [],
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMCJ9",
           "dependencies": [
             "aws_security_group.alb_sg",
             "data.aws_subnets.default_subnets",
@@ -586,7 +586,7 @@
           "schema_version": 0,
           "attributes": {
             "alpn_policy": null,
-            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:listener/app/manasvi-strapi-service-alb/3f146fe2da3597c0/caa1b19be4dd4930",
+            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:listener/app/manasvi-strapi-service-alb/3e9bee3417e41e78/bfe7ad7aab568562",
             "certificate_arn": null,
             "default_action": [
               {
@@ -596,12 +596,12 @@
                 "forward": [],
                 "order": 1,
                 "redirect": [],
-                "target_group_arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/3f4f87e5db8a58a4",
+                "target_group_arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/e04aef40f71430ab",
                 "type": "forward"
               }
             ],
-            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:listener/app/manasvi-strapi-service-alb/3f146fe2da3597c0/caa1b19be4dd4930",
-            "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3f146fe2da3597c0",
+            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:listener/app/manasvi-strapi-service-alb/3e9bee3417e41e78/bfe7ad7aab568562",
+            "load_balancer_arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3e9bee3417e41e78",
             "mutual_authentication": [],
             "port": 80,
             "protocol": "HTTP",
@@ -652,8 +652,8 @@
         {
           "schema_version": 0,
           "attributes": {
-            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/3f4f87e5db8a58a4",
-            "arn_suffix": "targetgroup/manasvi-strapi-service-blue-tg/3f4f87e5db8a58a4",
+            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/e04aef40f71430ab",
+            "arn_suffix": "targetgroup/manasvi-strapi-service-blue-tg/e04aef40f71430ab",
             "connection_termination": null,
             "deregistration_delay": "300",
             "health_check": [
@@ -669,11 +669,11 @@
                 "unhealthy_threshold": 2
               }
             ],
-            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/3f4f87e5db8a58a4",
+            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-blue-tg/e04aef40f71430ab",
             "ip_address_type": "ipv4",
             "lambda_multi_value_headers_enabled": false,
             "load_balancer_arns": [
-              "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3f146fe2da3597c0"
+              "arn:aws:elasticloadbalancing:ap-south-1:145065858967:loadbalancer/app/manasvi-strapi-service-alb/3e9bee3417e41e78"
             ],
             "load_balancing_algorithm_type": "round_robin",
             "load_balancing_anomaly_mitigation": "off",
@@ -745,8 +745,8 @@
         {
           "schema_version": 0,
           "attributes": {
-            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-green-tg/32131f0dcf9fedc8",
-            "arn_suffix": "targetgroup/manasvi-strapi-service-green-tg/32131f0dcf9fedc8",
+            "arn": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-green-tg/0640c53a0f3247c0",
+            "arn_suffix": "targetgroup/manasvi-strapi-service-green-tg/0640c53a0f3247c0",
             "connection_termination": null,
             "deregistration_delay": "300",
             "health_check": [
@@ -762,7 +762,7 @@
                 "unhealthy_threshold": 2
               }
             ],
-            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-green-tg/32131f0dcf9fedc8",
+            "id": "arn:aws:elasticloadbalancing:ap-south-1:145065858967:targetgroup/manasvi-strapi-service-green-tg/0640c53a0f3247c0",
             "ip_address_type": "ipv4",
             "lambda_multi_value_headers_enabled": false,
             "load_balancer_arns": [],
@@ -836,7 +836,7 @@
         {
           "schema_version": 1,
           "attributes": {
-            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-024606a903286e11f",
+            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-02ae0ec846c5b9797",
             "description": "Managed by Terraform",
             "egress": [
               {
@@ -853,7 +853,7 @@
                 "to_port": 0
               }
             ],
-            "id": "sg-024606a903286e11f",
+            "id": "sg-02ae0ec846c5b9797",
             "ingress": [
               {
                 "cidr_blocks": [
@@ -873,7 +873,7 @@
             "name_prefix": "",
             "owner_id": "145065858967",
             "region": "ap-south-1",
-            "revoke_rules_on_delete": false,
+            "revoke_rules_on_delete": null,
             "tags": {},
             "tags_all": {},
             "timeouts": null,
@@ -896,7 +896,7 @@
         {
           "schema_version": 1,
           "attributes": {
-            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-0ddcac72be559565b",
+            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-056b310854a11f602",
             "description": "Managed by Terraform",
             "egress": [
               {
@@ -913,7 +913,7 @@
                 "to_port": 0
               }
             ],
-            "id": "sg-0ddcac72be559565b",
+            "id": "sg-056b310854a11f602",
             "ingress": [
               {
                 "cidr_blocks": [],
@@ -923,7 +923,7 @@
                 "prefix_list_ids": [],
                 "protocol": "tcp",
                 "security_groups": [
-                  "sg-094ae4ac60041537d"
+                  "sg-0553f269d1032bf1b"
                 ],
                 "self": false,
                 "to_port": 5432
@@ -933,7 +933,7 @@
             "name_prefix": "",
             "owner_id": "145065858967",
             "region": "ap-south-1",
-            "revoke_rules_on_delete": false,
+            "revoke_rules_on_delete": null,
             "tags": {},
             "tags_all": {},
             "timeouts": null,
@@ -958,7 +958,7 @@
         {
           "schema_version": 1,
           "attributes": {
-            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-094ae4ac60041537d",
+            "arn": "arn:aws:ec2:ap-south-1:145065858967:security-group/sg-0553f269d1032bf1b",
             "description": "Managed by Terraform",
             "egress": [
               {
@@ -975,7 +975,7 @@
                 "to_port": 0
               }
             ],
-            "id": "sg-094ae4ac60041537d",
+            "id": "sg-0553f269d1032bf1b",
             "ingress": [
               {
                 "cidr_blocks": [],
@@ -985,7 +985,7 @@
                 "prefix_list_ids": [],
                 "protocol": "tcp",
                 "security_groups": [
-                  "sg-024606a903286e11f"
+                  "sg-02ae0ec846c5b9797"
                 ],
                 "self": false,
                 "to_port": 1337
@@ -995,7 +995,7 @@
             "name_prefix": "",
             "owner_id": "145065858967",
             "region": "ap-south-1",
-            "revoke_rules_on_delete": false,
+            "revoke_rules_on_delete": null,
             "tags": {},
             "tags_all": {},
             "timeouts": null,

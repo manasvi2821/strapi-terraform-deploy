@@ -1,0 +1,60 @@
+name: Deploy to ECS Blue/Green
+
+on:
+  push:
+    branches:
+      - main   # or your branch name
+
+env:
+    TF_WORKING_DIR: terraform02
+    AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: manasvi/strapi-app
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update ECS task definition
+        run: |
+          TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition manasvi-strapi-task --query "taskDefinition.taskDefinitionArn" --output text)
+          NEW_TASK_DEF=$(aws ecs register-task-definition \
+            --family manasvi-strapi-task \
+            --execution-role-arn arn:aws:iam::145065858967:role/ecsTaskExecutionRole \
+            --network-mode awsvpc \
+            --requires-compatibilities FARGATE \
+            --cpu "256" \
+            --memory "512" \
+            --container-definitions "[{\"name\":\"strapi\",\"image\":\"${{ steps.login-ecr.outputs.registry }}/manasvi/strapi-app:${{ github.sha }}\",\"essential\":true,\"portMappings\":[{\"containerPort\":1337,\"protocol\":\"tcp\"}]}]" \
+            --query "taskDefinition.taskDefinitionArn" --output text)
+          echo "New task definition: $NEW_TASK_DEF"
+
+      - name: Trigger CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name manasvi-strapi-deploy-app \
+            --deployment-group-name manasvi-strapi-blue-green \
+            --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+            --revision revisionType=AppSpecContent,appSpecContent="{\"version\":\"1.0\",\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"$NEW_TASK_DEF\",\"LoadBalancerInfo\":{\"ContainerName\":\"strapi\",\"ContainerPort\":1337}}}}]}"
