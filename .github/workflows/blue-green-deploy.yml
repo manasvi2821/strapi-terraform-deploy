@@ -53,9 +53,30 @@ jobs:
 
       - name: Trigger CodeDeploy deployment
         run: |
+          echo "Creating appspec.json for deployment..."
+          cat > appspec.json <<EOF
+                {
+                  "version": "1.0",
+                  "Resources": [
+                    {
+                      "TargetService": {
+                        "Type": "AWS::ECS::Service",
+                        "Properties": {
+                          "TaskDefinition": "$NEW_TASK_DEF",
+                          "LoadBalancerInfo": {
+                           "ContainerName": "strapi",
+                           "ContainerPort": 1337
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+                EOF
+
           echo "Creating CodeDeploy deployment..."
           aws deploy create-deployment \
             --application-name manasvi-strapi-deploy-app \
             --deployment-group-name manasvi-strapi-blue-green \
             --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
-            --revision revisionType=AppSpecContent,appSpecContent="{\"version\":\"1.0\",\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"$NEW_TASK_DEF\",\"LoadBalancerInfo\":{\"ContainerName\":\"strapi\",\"ContainerPort\":1337}}}}]}"
+            --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json
