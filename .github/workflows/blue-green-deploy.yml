@@ -64,5 +64,6 @@ jobs:
             --application-name manasvi-strapi-deploy-app \
             --deployment-group-name manasvi-strapi-blue-green \
             --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
-            --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json \
+            --revision "revisionType=AppSpecContent,appSpecContent={\"content\":\"$(jq -c . appspec.json | sed 's/\"/\\\"/g')\"}" \
             --region ${{ env.AWS_REGION }}
+
