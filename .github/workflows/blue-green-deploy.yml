@@ -49,28 +49,20 @@ jobs:
             --memory "512" \
             --container-definitions "[{\"name\":\"strapi\",\"image\":\"${{ steps.login-ecr.outputs.registry }}/manasvi/strapi-app:${{ github.sha }}\",\"essential\":true,\"portMappings\":[{\"containerPort\":1337,\"protocol\":\"tcp\"}]}]" \
             --query "taskDefinition.taskDefinitionArn" --output text)
+
           echo "NEW_TASK_DEF=$NEW_TASK_DEF" >> $GITHUB_ENV
+
+      - name: Update TaskDefinition in appspec.json
+        run: |
+          echo "Updating TaskDefinition ARN in appspec.json..."
+          sed -i "s|REPLACE_ME|${NEW_TASK_DEF}|g" appspec.json
 
       - name: Trigger CodeDeploy deployment
         run: |
-             echo "Creating appspec.json for deployment..."
-             NEW_TASK_DEF=$NEW_TASK_DEF
-             cat > appspec.json <<EOF
-              {
-              "version": "1.0",
-              "Resources": [
-              {
-             "TargetService": {
-             "Type": "AWS::ECS::Service",
-             "Properties": {
-              "TaskDefinition": "$NEW_TASK_DEF",
-              "LoadBalancerInfo": {
-                "ContainerName": "strapi",
-                "ContainerPort": 1337
-              }
-              }
-              }
-              }
-              ]
-              }
-                        EOF
+          echo "Starting CodeDeploy deployment..."
+          aws deploy create-deployment \
+            --application-name manasvi-strapi-deploy-app \
+            --deployment-group-name manasvi-strapi-blue-green \
+            --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+            --revision revisionType=AppSpecContent,appSpecContent=file://appspec.json \
+            --region ${{ env.AWS_REGION }}

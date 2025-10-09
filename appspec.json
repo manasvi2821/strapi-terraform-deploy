@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "Resources": [
+    {
+      "TargetService": {
+        "Type": "AWS::ECS::Service",
+        "Properties": {
+          "TaskDefinition": "REPLACE_ME",
+          "LoadBalancerInfo": {
+            "ContainerName": "strapi",
+            "ContainerPort": 1337
+          }
+        }
+      }
+    }
+  ]
+}
